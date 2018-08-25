@@ -3,7 +3,7 @@ var app = {
 
   //TODO: The current 'handleUsernameClick' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'http://parse.CAMPUS.hackreactor.com/chatterbox/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/messages',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -26,7 +26,7 @@ var app = {
     app.$roomSelect.on('change', app.handleRoomChange);
 
     // Fetch previous messages
-    app.startSpinner();
+    // app.startSpinner();
     app.fetch(false);
 
     // Poll for new messages
@@ -36,7 +36,7 @@ var app = {
   },
 
   send: function(message) {
-    app.startSpinner();
+    // app.startSpinner();
 
     // POST the message to the server
     $.ajax({
@@ -46,6 +46,7 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         // Clear messages input
+        console.log('hello');
         app.$message.val('');
 
         // Trigger a fetch to update the messages, pass true to animate
@@ -61,28 +62,29 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'GET',
-      data: { order: '-createdAt' },
+      data: {},
       success: function(data) {
         // Don't bother if we have nothing to work with
-        if (!data.results || !data.results.length) { return; }
+        // if (!data.results || !data.results.length) { return; }
 
         // Store messages for caching later
-        app.messages = data.results;
+        console.log(data);
+        app.messages = data;
 
         // Get the last message
-        var mostRecentMessage = data.results[data.results.length - 1];
+        var mostRecentMessage = data[data.length - 1];
 
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId) {
-          // Update the UI with the fetched rooms
-          app.renderRoomList(data.results);
+        // if (mostRecentMessage.objectId !== app.lastMessageId) {
+        // Update the UI with the fetched rooms
+        app.renderRoomList(data);
 
-          // Update the UI with the fetched messages
-          app.renderMessages(data.results, animate);
+        // Update the UI with the fetched messages
+        app.renderMessages(data, animate);
 
-          // Store the ID of the most recent message
-          app.lastMessageId = mostRecentMessage.objectId;
-        }
+        // Store the ID of the most recent message
+        app.lastMessageId = mostRecentMessage.objectId;
+        // }
       },
       error: function(error) {
         console.error('chatterbox: Failed to fetch messages', error);
@@ -144,8 +146,8 @@ var app = {
   },
 
   renderMessage: function(message) {
-    if (!message.roomname) {
-      message.roomname = 'lobby';
+    if (!message.chatroom) {
+      message.chatroom = 'lobby';
     }
 
     // Create a div to hold the chats
@@ -154,7 +156,7 @@ var app = {
     // Add in the message data using DOM methods to avoid XSS
     // Store the username in the element's data attribute
     var $username = $('<span class="username"/>');
-    $username.text(message.username + ': ').attr('data-roomname', message.roomname).attr('data-username', message.username).appendTo($chat);
+    $username.text(message.username + ': ').attr('data-roomname', message.chatroom).attr('data-username', message.username).appendTo($chat);
 
     // Add the friend class
     if (app.friends[message.username] === true) {
@@ -162,7 +164,7 @@ var app = {
     }
 
     var $message = $('<br><span/>');
-    $message.text(message.text).appendTo($chat);
+    $message.text(message.message).appendTo($chat);
 
     // Add the message to the UI
     app.$chats.append($chat);
@@ -203,7 +205,7 @@ var app = {
         app.$roomSelect.val(roomname);
       }
     } else {
-      app.startSpinner();
+      // app.startSpinner();
       // Store as undefined for empty names
       app.roomname = app.$roomSelect.val();
     }
@@ -214,8 +216,8 @@ var app = {
   handleSubmit: function(event) {
     var message = {
       username: app.username,
-      text: app.$message.val(),
-      roomname: app.roomname || 'lobby'
+      message: app.$message.val(),
+      chatroom: app.roomname || 'lobby'
     };
 
     app.send(message);

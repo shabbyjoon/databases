@@ -1,4 +1,4 @@
-DROP DATABASE chat;
+-- DROP DATABASE chat;
 
 CREATE DATABASE chat;
 
@@ -20,9 +20,10 @@ DROP TABLE IF EXISTS `messages`;
     
 CREATE TABLE `messages` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `username` INTEGER(11) NULL DEFAULT NULL,
-  `textMessage` VARCHAR(140) NULL DEFAULT NULL,
-  `chatroom` INTEGER NULL DEFAULT NULL,
+  -- `username` INTEGER(11) NULL DEFAULT NULL,
+  `username` VARCHAR(140) NULL DEFAULT NULL,
+  `message` VARCHAR(140) NULL DEFAULT NULL,
+  `chatroom` VARCHAR(140) NULL DEFAULT NULL,
   `timePosted` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
@@ -45,20 +46,20 @@ CREATE TABLE `usernames` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `chatrooms`;
+-- DROP TABLE IF EXISTS `chatrooms`;
     
-CREATE TABLE `chatrooms` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `chatroom` VARCHAR(20) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
+-- CREATE TABLE `chatrooms` (
+--   `id` INTEGER NOT NULL AUTO_INCREMENT,
+--   `chatroom` VARCHAR(20) NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`)
+-- );
 
 -- ---
 -- Foreign Keys 
 -- ---
 
-ALTER TABLE `messages` ADD FOREIGN KEY (username) REFERENCES `usernames` (`id`);
-ALTER TABLE `messages` ADD FOREIGN KEY (chatroom) REFERENCES `chatrooms` (`id`);
+-- ALTER TABLE `messages` ADD FOREIGN KEY (username) REFERENCES `usernames` (`id`);
+-- ALTER TABLE `messages` ADD FOREIGN KEY (chatroom) REFERENCES `chatrooms` (`id`);
 
 -- ---
 -- Table Properties

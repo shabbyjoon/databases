@@ -24,6 +24,11 @@ app.use('/classes', router);
 // Serve the client files
 app.use(express.static(__dirname + '/../client'));
 
+// Testing Headers
+// app.use(function (req, res, next) {
+//   res.setHeader('access-control-allow-origin', '*')
+// })
+
 // If we are being run directly, run the server.
 if (!module.parent) {
   app.listen(app.get('port'));
